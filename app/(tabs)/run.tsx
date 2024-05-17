@@ -1,7 +1,7 @@
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { useEffect, useState } from "react";
-
+import { Image } from "react-native";
 import * as Location from "expo-location";
 
 export default function RunScreen() {
@@ -24,7 +24,6 @@ export default function RunScreen() {
     })();
   }, []);
 
-  // function to check permissions and get Locatio
   return (
     <>
       <View>
@@ -35,10 +34,22 @@ export default function RunScreen() {
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
               }}
-            ></Marker>
+            >
+              <Image
+                style={styles.markerImage}
+                source={require("../../assets/images/navigation-arrow.png")}
+              />
+            </Marker>
           )}
         </MapView>
       </View>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  markerImage: {
+    width: 25,
+    height: 25,
+  },
+});
