@@ -1,11 +1,12 @@
 import { View, StyleSheet } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Region } from "react-native-maps";
 import { useEffect, useState } from "react";
 import { Image } from "react-native";
 import * as Location from "expo-location";
 
 export default function RunScreen() {
   const [location, setLocation] = useState<Location.LocationObject>();
+  const [region, setRegion] = useState<Region>();
 
   useEffect(() => {
     (async () => {
@@ -19,7 +20,15 @@ export default function RunScreen() {
       }
 
       await Location.getCurrentPositionAsync()
-        .then((res) => setLocation(res))
+        .then((res) => {
+          setLocation(res);
+          setRegion({
+            longitude: res.coords.longitude,
+            latitude: res.coords.latitude,
+            longitudeDelta: 0.007,
+            latitudeDelta: 0.007,
+          } as Region);
+        })
         .catch((err) => console.log(err));
     })();
   }, []);
@@ -27,7 +36,7 @@ export default function RunScreen() {
   return (
     <>
       <View>
-        <MapView style={{ width: "100%", height: "90%" }}>
+        <MapView style={{ width: "100%", height: "100%" }} region={region}>
           {location && (
             <Marker
               coordinate={{
