@@ -11,8 +11,8 @@ export default function expandableButton({ menuItems }: Props) {
     <View style={styles.container}>
       {menuItems && revealMenu && (
         <View style={styles.optionsContainer}>
-          {menuItems.map((item) => (
-            <View style={styles.option}>
+          {menuItems.map((item, key) => (
+            <View style={styles.option} key={key}>
               <Pressable onPress={item.onClick}>
                 <Text style={styles.optionText}>{item.title}</Text>
               </Pressable>
