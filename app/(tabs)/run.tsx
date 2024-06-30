@@ -1,14 +1,30 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Button, Alert, Pressable, Text } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Image } from "react-native";
 import * as Location from "expo-location";
+import ExpandableButton from "@/components/ExpandableButton";
+import { MenuItem } from "@/models/MenuItem";
 
 export default function RunScreen() {
   const [location, setLocation] = useState<Location.LocationObject>();
   const [region, setRegion] = useState<Region>();
+  const mapRef = useRef<MapView>(null);
+
+  const resetPosition = () => {
+    mapRef.current?.animateToRegion(region!, 600);
+  };
+
+  const menuItems: MenuItem[] = [
+    { title: "Start run", onClick: () => Alert.alert("menuItemCostam") },
+    {
+      title: "Reset position",
+      onClick: resetPosition,
+    },
+  ];
 
   useEffect(() => {
+    //Revoke sometime -> to edit
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status == "granted") {
@@ -36,7 +52,11 @@ export default function RunScreen() {
   return (
     <>
       <View>
-        <MapView style={{ width: "100%", height: "100%" }} region={region}>
+        <MapView
+          style={{ width: "100%", height: "90%" }}
+          region={region}
+          ref={mapRef}
+        >
           {location && (
             <Marker
               coordinate={{
@@ -51,6 +71,7 @@ export default function RunScreen() {
             </Marker>
           )}
         </MapView>
+        <ExpandableButton menuItems={menuItems} />
       </View>
     </>
   );
